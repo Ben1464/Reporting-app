@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 
-const ChallengesFaced = () => {
+const ChallengesFaced = ({ setChallengesData }) => {
   const [challenges, setChallenges] = useState([
     { challenge: '', impact: '', solution: '', urgency: '' },
   ]);
 
+  // Update both local state and parent state when a change is made
   const handleChange = (index, field, value) => {
     const updatedChallenges = [...challenges];
     updatedChallenges[index][field] = value;
-    setChallenges(updatedChallenges);
+    setChallenges(updatedChallenges); // Update local state
+    setChallengesData(updatedChallenges); // Update parent state
   };
 
+  // Add a new challenge
   const addChallenge = () => {
-    setChallenges([...challenges, { challenge: '', impact: '', solution: '', urgency: '' }]);
+    const newChallenges = [
+      ...challenges,
+      { challenge: '', impact: '', solution: '', urgency: '' },
+    ];
+    setChallenges(newChallenges);
+    setChallengesData(newChallenges); // Also update parent state
   };
 
   return (

@@ -1,61 +1,67 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import MyDocument from './MyDocument';
 import Sales from './components/Sales';
 import MarketingActivities from './components/MarketingActivities';
-import Competition from './components/Competition'; // Ensure this is the correct import
+import CompetitiveAnalysis from './components/CompetitiveAnalysis';
 import ChallengesFaced from './components/ChallengesFaced';
 import TopSellingProducts from './components/TopSellingProduct';
 import UpcomingActions from './components/UpcomingActions';
-import { DownloadPDF } from './MyDocument'; // Import the PDF download component
-import './App.css'; // Your CSS file for styles
+import './App.css'; // Import the CSS file for styling
 
 const App = () => {
-  const [salesData, setSalesData] = useState([]); // Add state to manage sales data
-
-  // Function to handle setting sales data from the Sales component
-  const updateSalesData = (data) => {
-    setSalesData(data);
-  };
+  const [salesData, setSalesData] = useState([]);
+  const [marketingActivities, setMarketingActivities] = useState([]);
+  const [competitiveAnalysis, setCompetitiveAnalysis] = useState([]);
+  const [challengesFaced, setChallengesFaced] = useState([]);
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
+  const [upcomingActions, setUpcomingActions] = useState([]);
 
   return (
-    <Router>
-      <div className="App">
-        <h1>Daily Sales Report</h1>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Sales</Link>
-            </li>
-            <li>
-              <Link to="/marketing-activities">Marketing Activities</Link>
-            </li>
-            <li>
-              <Link to="/competitive-analysis">Competitive Analysis</Link>
-            </li>
-            <li>
-              <Link to="/challenges-faced">Challenges Faced</Link>
-            </li>
-            <li>
-              <Link to="/top-selling-products">Top Selling Products</Link>
-            </li>
-            <li>
-              <Link to="/upcoming-actions">Upcoming Actions</Link>
-            </li>
-          </ul>
-        </nav>
+    <div className="container"> {/* Main container for the app */}
+      <h1>Daily Report App</h1>
 
-        <DownloadPDF salesData={salesData} /> {/* Include PDF download link here */}
-
-        <Routes>
-          <Route path="/" element={<Sales updateSalesData={updateSalesData} />} />
-          <Route path="/marketing-activities" element={<MarketingActivities />} />
-          <Route path="/competitive-analysis" element={<Competition />} />
-          <Route path="/challenges-faced" element={<ChallengesFaced />} />
-          <Route path="/top-selling-products" element={<TopSellingProducts />} />
-          <Route path="/upcoming-actions" element={<UpcomingActions />} />
-        </Routes>
+      {/* Components */}
+      <div className="component">
+        <Sales setSalesData={setSalesData} />
       </div>
-    </Router>
+      <div className="component">
+        <MarketingActivities setMarketingActivities={setMarketingActivities} />
+      </div>
+      <div className="component">
+        <CompetitiveAnalysis setCompetitiveAnalysis={setCompetitiveAnalysis} />
+      </div>
+      <div className="component">
+        <ChallengesFaced setChallengesFaced={setChallengesFaced} />
+      </div>
+      <div className="component">
+        <TopSellingProducts setTopSellingProducts={setTopSellingProducts} />
+      </div>
+      <div className="component">
+        <UpcomingActions setUpcomingActionsData={setUpcomingActions} />
+      </div>
+
+      {/* Download PDF Button */}
+      <PDFDownloadLink
+        document={
+          <MyDocument
+            salesData={salesData}
+            marketingActivities={marketingActivities}
+            competitiveAnalysis={competitiveAnalysis}
+            challengesFaced={challengesFaced}
+            topSellingProducts={topSellingProducts}
+            upcomingActions={upcomingActions}
+          />
+        }
+        fileName="daily_report.pdf"
+      >
+        {({ loading }) => (
+          <a className="pdf-download-link"> {/* Updated to use a link style */}
+            {loading ? 'Preparing document...' : 'Download Daily Report as PDF'}
+          </a>
+        )}
+      </PDFDownloadLink>
+    </div>
   );
 };
 

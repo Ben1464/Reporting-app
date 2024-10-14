@@ -1,84 +1,126 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
-import Sales from './components/Sales'; // Adjust the import paths as needed
-import MarketingActivities from './components/MarketingActivities';
-import Competition from './components/Competition'; // Importing CompetitiveAnalysis properly
-import ChallengesFaced from './components/ChallengesFaced';
-import TopSellingProducts from './components/TopSellingProduct';
-import UpcomingActions from './components/UpcomingActions';
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'column',
-    padding: 20,
-  },
-  section: {
-    marginBottom: 10,
-  },
-  header: {
-    fontSize: 18,
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-  table: {
-    display: 'table',
-    width: 'auto',
-    marginBottom: 10,
-  },
-  tableRow: {
-    margin: 'auto',
-    flexDirection: 'row',
-  },
-  tableCell: {
-    margin: 5,
-    padding: 5,
-    border: '1px solid #000',
-    flexGrow: 1,
-  },
+  page: { padding: 30 },
+  section: { marginBottom: 20 },
+  header: { fontSize: 18, marginBottom: 10, textDecoration: 'underline' },
+  table: { marginTop: 10 },
+  tableHeader: { fontSize: 14, fontWeight: 'bold', marginBottom: 5 },
+  tableRow: { flexDirection: 'row', borderBottomWidth: 1, paddingVertical: 5 },
+  tableCell: { flex: 1, textAlign: 'left', fontSize: 10 },
 });
 
-const MyDocument = ({ salesData }) => {
-  return (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.header}>Sales</Text>
-          {/* Render Sales Data */}
-          <Sales data={salesData} /> {/* Pass salesData as a prop */}
-        </View>
+const MyDocument = ({
+  salesData,
+  marketingActivities,
+  competitiveAnalysis,
+  challengesFaced,
+  topSellingProducts,
+  upcomingActions,
+}) => (
+  <Document>
+    <Page style={styles.page}>
+      {/* Sales Section */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Sales Data</Text>
+        {salesData.length ? (
+          salesData.map((entry, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{entry.product}</Text>
+              <Text style={styles.tableCell}>{entry.packSize}</Text>
+              <Text style={styles.tableCell}>{entry.quantity}</Text>
+              <Text style={styles.tableCell}>{entry.price}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No sales data available.</Text>
+        )}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.header}>Marketing Activities</Text>
-          <MarketingActivities />
-        </View>
+      {/* Marketing Activities */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Marketing Activities</Text>
+        {marketingActivities.length ? (
+          marketingActivities.map((activity, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{activity.activity}</Text>
+              <Text style={styles.tableCell}>{activity.goal}</Text>
+              <Text style={styles.tableCell}>{activity.budget}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No marketing activities available.</Text>
+        )}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.header}>Competitive Analysis</Text>
-          <Competition /> {/* Ensure this is the correct component name */}
-        </View>
+      {/* Competitive Analysis */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Competitive Analysis</Text>
+        {competitiveAnalysis.length ? (
+          competitiveAnalysis.map((comp, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{comp.competitor}</Text>
+              <Text style={styles.tableCell}>{comp.marketShare}</Text>
+              <Text style={styles.tableCell}>{comp.topProduct}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No competitive analysis data available.</Text>
+        )}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.header}>Challenges Faced</Text>
-          <ChallengesFaced />
-        </View>
+      {/* Challenges Faced */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Challenges Faced</Text>
+        {challengesFaced.length ? (
+          challengesFaced.map((challenge, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{challenge.challenge}</Text>
+              <Text style={styles.tableCell}>{challenge.impact}</Text>
+              <Text style={styles.tableCell}>{challenge.solution}</Text>
+              <Text style={styles.tableCell}>{challenge.urgency}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No challenges available.</Text>
+        )}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.header}>Top Selling Products</Text>
-          <TopSellingProducts />
-        </View>
+      {/* Top Selling Products */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Top Selling Products</Text>
+        {topSellingProducts.length ? (
+          topSellingProducts.map((product, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{product.competitor}</Text>
+              <Text style={styles.tableCell}>{product.product}</Text>
+              <Text style={styles.tableCell}>{product.unitsSold}</Text>
+              <Text style={styles.tableCell}>{product.totalValue}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No top selling products available.</Text>
+        )}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={styles.header}>Upcoming Actions</Text>
-          <UpcomingActions />
-        </View>
-      </Page>
-    </Document>
-  );
-};
-
-// PDF Download Link Component
-export const DownloadPDF = ({ salesData }) => (
-  <PDFDownloadLink document={<MyDocument salesData={salesData} />} fileName="report.pdf">
-    {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-  </PDFDownloadLink>
+      {/* Upcoming Actions */}
+      <View style={styles.section}>
+        <Text style={styles.header}>Upcoming Actions</Text>
+        {upcomingActions.length ? (
+          upcomingActions.map((action, idx) => (
+            <View key={idx} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{action.action}</Text>
+              <Text style={styles.tableCell}>{action.description}</Text>
+              <Text style={styles.tableCell}>{action.status}</Text>
+            </View>
+          ))
+        ) : (
+          <Text>No upcoming actions available.</Text>
+        )}
+      </View>
+    </Page>
+  </Document>
 );
+
+export default MyDocument;

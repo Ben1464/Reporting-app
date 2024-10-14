@@ -1,38 +1,72 @@
-.App {
+/* App.css */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #eef2f3; /* Soft background for a clean look */
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
   text-align: center;
+  color: #333; /* Dark text for contrast */
+  margin: 20px 0;
+  font-size: 2.5em; /* Increased font size for emphasis */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.container {
+  max-width: 900px; /* Increased max width for better content spacing */
+  margin: 0 auto;
+  padding: 30px; /* Increased padding for more breathing space */
+  background: white; /* White background for main content */
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.component {
+  margin-bottom: 30px; /* Space between components */
+  padding: 20px; /* More padding for better content spacing */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f9f9f9; /* Slightly off-white background for components */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  border: 1px solid #e0e0e0; /* Light border for definition */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.component:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow on hover */
+}
+
+.pdf-download-link {
+  display: block;
+  text-align: center;
+  margin-top: 30px; /* Increased margin for spacing */
+  padding: 15px; /* Increased padding for the button */
   color: white;
+  background-color: #007bff; /* Primary color for the download button */
+  border-radius: 8px; /* More rounded corners */
+  text-decoration: none; /* No underline for link */
+  font-size: 1.2em; /* Increased font size for emphasis */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
 }
 
-.App-link {
-  color: #61dafb;
+.pdf-download-link:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Button styles */
+button {
+  background-color: #28a745; /* Success color for buttons */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+button:hover {
+  background-color: #218838; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
 }

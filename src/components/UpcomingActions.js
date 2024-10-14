@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 
-const UpcomingActions = () => {
+const UpcomingActions = ({ setUpcomingActionsData }) => {
   const [actions, setActions] = useState([
     { action: '', description: '', status: '', expectedOutcome: '', timeline: '', followUpDates: '', remarks: '' },
   ]);
 
+  // Update both local and parent state
   const handleChange = (index, field, value) => {
     const updatedActions = [...actions];
     updatedActions[index][field] = value;
-    setActions(updatedActions);
+    setActions(updatedActions);  // Update local state
+    setUpcomingActionsData(updatedActions);  // Update parent state
   };
 
+  // Add a new action entry
   const addAction = () => {
-    setActions([...actions, { action: '', description: '', status: '', expectedOutcome: '', timeline: '', followUpDates: '', remarks: '' }]);
+    const newActions = [
+      ...actions,
+      { action: '', description: '', status: '', expectedOutcome: '', timeline: '', followUpDates: '', remarks: '' },
+    ];
+    setActions(newActions);
+    setUpcomingActionsData(newActions);  // Also update parent state
   };
 
   return (

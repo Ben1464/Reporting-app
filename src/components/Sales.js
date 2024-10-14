@@ -29,14 +29,20 @@ const categories = {
   },
 };
 
-const Sales = () => {
+const Sales = ({ setSalesData }) => {
   const [dailyTarget, setDailyTarget] = useState(0);
   const [salesEntries, setSalesEntries] = useState([]);
 
-  const handleTargetChange = (e) => setDailyTarget(e.target.value);
+  const handleTargetChange = (e) => {
+    const target = parseInt(e.target.value) || 0;
+    setDailyTarget(target);
+    setSalesData({ dailyTarget: target, salesEntries }); // Update parent state
+  };
 
   const addSalesEntry = () => {
-    setSalesEntries([...salesEntries, { product: '', packSize: '', quantity: 0, price: 0 }]);
+    const newEntries = [...salesEntries, { product: '', packSize: '', quantity: 0, price: 0 }];
+    setSalesEntries(newEntries);
+    setSalesData({ dailyTarget, salesEntries: newEntries }); // Also update parent state
   };
 
   const handleProductChange = (index, product) => {
@@ -46,29 +52,32 @@ const Sales = () => {
     updatedEntries[index].quantity = 0;
     updatedEntries[index].price = 0;
     setSalesEntries(updatedEntries);
+    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handlePackSizeChange = (index, packSize) => {
     const updatedEntries = [...salesEntries];
     updatedEntries[index].packSize = packSize;
     setSalesEntries(updatedEntries);
+    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handleQuantityChange = (index, quantity) => {
     const updatedEntries = [...salesEntries];
-    updatedEntries[index].quantity = parseInt(quantity) || 0; // Ensure quantity is a number
+    updatedEntries[index].quantity = parseInt(quantity) || 0;
     setSalesEntries(updatedEntries);
+    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handlePriceChange = (index, price) => {
     const updatedEntries = [...salesEntries];
-    updatedEntries[index].price = parseFloat(price) || 0; // Ensure price is a number
+    updatedEntries[index].price = parseFloat(price) || 0;
     setSalesEntries(updatedEntries);
+    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const calculateTotalSales = () => {
     return salesEntries.reduce((total, entry) => {
-      // Total sales = quantity * price
       return total + (entry.quantity * entry.price) || 0;
     }, 0);
   };
