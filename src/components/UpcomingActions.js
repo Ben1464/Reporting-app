@@ -1,26 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const UpcomingActions = ({ setUpcomingActionsData }) => {
   const [actions, setActions] = useState([
-    { action: '', description: '', status: '', expectedOutcome: '', timeline: '', followUpDates: '', remarks: '' },
+    {
+      action: '',
+      description: '',
+      status: '',
+      expectedOutcome: '',
+      timeline: '',
+      followUpDates: '',
+      remarks: '',
+    },
   ]);
 
-  // Update both local and parent state
+  // Sync the parent state with the local state whenever it changes
+  useEffect(() => {
+    setUpcomingActionsData(actions);
+  }, [actions, setUpcomingActionsData]);
+
+  // Handle changes in input fields and update state immutably
   const handleChange = (index, field, value) => {
-    const updatedActions = [...actions];
-    updatedActions[index][field] = value;
-    setActions(updatedActions);  // Update local state
-    setUpcomingActionsData(updatedActions);  // Update parent state
+    const updatedActions = actions.map((act, i) =>
+      i === index ? { ...act, [field]: value } : act
+    );
+    setActions(updatedActions);
   };
 
-  // Add a new action entry
+  // Add a new empty action entry
   const addAction = () => {
-    const newActions = [
+    setActions([
       ...actions,
-      { action: '', description: '', status: '', expectedOutcome: '', timeline: '', followUpDates: '', remarks: '' },
-    ];
-    setActions(newActions);
-    setUpcomingActionsData(newActions);  // Also update parent state
+      {
+        action: '',
+        description: '',
+        status: '',
+        expectedOutcome: '',
+        timeline: '',
+        followUpDates: '',
+        remarks: '',
+      },
+    ]);
   };
 
   return (
@@ -35,7 +54,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
             <th>Status</th>
             <th>Expected Outcome</th>
             <th>Timeline</th>
-            <th>Follow Up Dates</th>
+            <th>Follow-Up Dates</th>
             <th>Remarks</th>
           </tr>
         </thead>
@@ -47,6 +66,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.action}
                   onChange={(e) => handleChange(index, 'action', e.target.value)}
+                  placeholder="Enter action"
                 />
               </td>
               <td>
@@ -54,6 +74,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.description}
                   onChange={(e) => handleChange(index, 'description', e.target.value)}
+                  placeholder="Enter description"
                 />
               </td>
               <td>
@@ -72,6 +93,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.expectedOutcome}
                   onChange={(e) => handleChange(index, 'expectedOutcome', e.target.value)}
+                  placeholder="Expected outcome"
                 />
               </td>
               <td>
@@ -79,6 +101,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.timeline}
                   onChange={(e) => handleChange(index, 'timeline', e.target.value)}
+                  placeholder="Enter timeline"
                 />
               </td>
               <td>
@@ -86,6 +109,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.followUpDates}
                   onChange={(e) => handleChange(index, 'followUpDates', e.target.value)}
+                  placeholder="Follow-up dates"
                 />
               </td>
               <td>
@@ -93,6 +117,7 @@ const UpcomingActions = ({ setUpcomingActionsData }) => {
                   type="text"
                   value={action.remarks}
                   onChange={(e) => handleChange(index, 'remarks', e.target.value)}
+                  placeholder="Enter remarks"
                 />
               </td>
             </tr>

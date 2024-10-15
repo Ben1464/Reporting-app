@@ -1,26 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ChallengesFaced = ({ setChallengesData }) => {
   const [challenges, setChallenges] = useState([
     { challenge: '', impact: '', solution: '', urgency: '' },
   ]);
 
-  // Update both local state and parent state when a change is made
+  // Sync the parent state (setChallengesData) with the local state when it changes
+  useEffect(() => {
+    setChallengesData(challenges);
+  }, [challenges, setChallengesData]);
+
+  // Handle change in input fields and update state
   const handleChange = (index, field, value) => {
-    const updatedChallenges = [...challenges];
-    updatedChallenges[index][field] = value;
-    setChallenges(updatedChallenges); // Update local state
-    setChallengesData(updatedChallenges); // Update parent state
+    const updatedChallenges = challenges.map((ch, i) =>
+      i === index ? { ...ch, [field]: value } : ch
+    );
+    setChallenges(updatedChallenges);
   };
 
-  // Add a new challenge
+  // Add a new empty row for challenge input
   const addChallenge = () => {
-    const newChallenges = [
+    setChallenges([
       ...challenges,
       { challenge: '', impact: '', solution: '', urgency: '' },
-    ];
-    setChallenges(newChallenges);
-    setChallengesData(newChallenges); // Also update parent state
+    ]);
   };
 
   return (
@@ -44,6 +47,7 @@ const ChallengesFaced = ({ setChallengesData }) => {
                   type="text"
                   value={ch.challenge}
                   onChange={(e) => handleChange(index, 'challenge', e.target.value)}
+                  placeholder="Enter the challenge"
                 />
               </td>
               <td>
@@ -51,6 +55,7 @@ const ChallengesFaced = ({ setChallengesData }) => {
                   type="text"
                   value={ch.impact}
                   onChange={(e) => handleChange(index, 'impact', e.target.value)}
+                  placeholder="Impact on business"
                 />
               </td>
               <td>
@@ -58,6 +63,7 @@ const ChallengesFaced = ({ setChallengesData }) => {
                   type="text"
                   value={ch.solution}
                   onChange={(e) => handleChange(index, 'solution', e.target.value)}
+                  placeholder="Proposed solution"
                 />
               </td>
               <td>

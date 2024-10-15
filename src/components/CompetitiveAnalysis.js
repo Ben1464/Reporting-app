@@ -1,26 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CompetitiveAnalysis = ({ setCompetitiveData }) => {
   const [competitors, setCompetitors] = useState([
     { competitor: '', marketShare: '', topProduct: '', activities: '', description: '' },
   ]);
 
-  // Update both local and parent state
+  // Sync the parent state with local state
+  useEffect(() => {
+    setCompetitiveData(competitors);
+  }, [competitors, setCompetitiveData]);
+
+  // Handle changes in input fields and update state
   const handleChange = (index, field, value) => {
-    const updatedCompetitors = [...competitors];
-    updatedCompetitors[index][field] = value;
-    setCompetitors(updatedCompetitors);  // Update local state
-    setCompetitiveData(updatedCompetitors);  // Update parent state
+    const updatedCompetitors = competitors.map((comp, i) =>
+      i === index ? { ...comp, [field]: value } : comp
+    );
+    setCompetitors(updatedCompetitors);
   };
 
-  // Add a new competitor entry
+  // Add a new empty competitor entry
   const addCompetitor = () => {
-    const newCompetitors = [
+    setCompetitors([
       ...competitors,
       { competitor: '', marketShare: '', topProduct: '', activities: '', description: '' },
-    ];
-    setCompetitors(newCompetitors);
-    setCompetitiveData(newCompetitors);  // Also update parent state
+    ]);
   };
 
   return (
@@ -45,6 +48,7 @@ const CompetitiveAnalysis = ({ setCompetitiveData }) => {
                   type="text"
                   value={comp.competitor}
                   onChange={(e) => handleChange(index, 'competitor', e.target.value)}
+                  placeholder="Enter competitor name"
                 />
               </td>
               <td>
@@ -52,6 +56,7 @@ const CompetitiveAnalysis = ({ setCompetitiveData }) => {
                   type="text"
                   value={comp.marketShare}
                   onChange={(e) => handleChange(index, 'marketShare', e.target.value)}
+                  placeholder="Enter market share"
                 />
               </td>
               <td>
@@ -59,6 +64,7 @@ const CompetitiveAnalysis = ({ setCompetitiveData }) => {
                   type="text"
                   value={comp.topProduct}
                   onChange={(e) => handleChange(index, 'topProduct', e.target.value)}
+                  placeholder="Top product"
                 />
               </td>
               <td>
@@ -66,6 +72,7 @@ const CompetitiveAnalysis = ({ setCompetitiveData }) => {
                   type="text"
                   value={comp.activities}
                   onChange={(e) => handleChange(index, 'activities', e.target.value)}
+                  placeholder="Activities"
                 />
               </td>
               <td>
@@ -73,6 +80,7 @@ const CompetitiveAnalysis = ({ setCompetitiveData }) => {
                   type="text"
                   value={comp.description}
                   onChange={(e) => handleChange(index, 'description', e.target.value)}
+                  placeholder="Brief description"
                 />
               </td>
             </tr>

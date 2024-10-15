@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import MyDocument from './MyDocument';
 import Sales from './components/Sales';
@@ -17,31 +17,38 @@ const App = () => {
   const [topSellingProducts, setTopSellingProducts] = useState([]);
   const [upcomingActions, setUpcomingActions] = useState([]);
 
+  // Sync data across components
+  useEffect(() => {
+    // Any additional sync logic can be added here if necessary
+  }, [salesData, marketingActivities, competitiveAnalysis, challengesFaced, topSellingProducts, upcomingActions]);
+
   return (
-    <div className="container"> {/* Main container for the app */}
-      <h1>Daily Report App</h1>
+    <div className="app-container">
+      <h1 className="app-title">Daily Report App</h1>
 
-      {/* Components */}
-      <div className="component">
-        <Sales setSalesData={setSalesData} />
-      </div>
-      <div className="component">
-        <MarketingActivities setMarketingActivities={setMarketingActivities} />
-      </div>
-      <div className="component">
-        <CompetitiveAnalysis setCompetitiveAnalysis={setCompetitiveAnalysis} />
-      </div>
-      <div className="component">
-        <ChallengesFaced setChallengesFaced={setChallengesFaced} />
-      </div>
-      <div className="component">
-        <TopSellingProducts setTopSellingProducts={setTopSellingProducts} />
-      </div>
-      <div className="component">
-        <UpcomingActions setUpcomingActionsData={setUpcomingActions} />
+      {/* Components for Data Entry */}
+      <div className="components-container">
+        <div className="component">
+          <Sales setSalesData={setSalesData} />
+        </div>
+        <div className="component">
+          <MarketingActivities setMarketingActivities={setMarketingActivities} />
+        </div>
+        <div className="component">
+          <CompetitiveAnalysis setCompetitiveAnalysis={setCompetitiveAnalysis} />
+        </div>
+        <div className="component">
+          <ChallengesFaced setChallengesFaced={setChallengesFaced} />
+        </div>
+        <div className="component">
+          <TopSellingProducts setTopSellingData={setTopSellingProducts} />
+        </div>
+        <div className="component">
+          <UpcomingActions setUpcomingActionsData={setUpcomingActions} />
+        </div>
       </div>
 
-      {/* Download PDF Button */}
+      {/* PDF Download Button */}
       <PDFDownloadLink
         document={
           <MyDocument
@@ -56,9 +63,9 @@ const App = () => {
         fileName="daily_report.pdf"
       >
         {({ loading }) => (
-          <a className="pdf-download-link"> {/* Updated to use a link style */}
+          <button className="pdf-download-button">
             {loading ? 'Preparing document...' : 'Download Daily Report as PDF'}
-          </a>
+          </button>
         )}
       </PDFDownloadLink>
     </div>

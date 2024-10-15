@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const categories = {
   Insecticides: {
@@ -33,47 +33,50 @@ const Sales = ({ setSalesData }) => {
   const [dailyTarget, setDailyTarget] = useState(0);
   const [salesEntries, setSalesEntries] = useState([]);
 
+  // Sync parent state with the local state
+  useEffect(() => {
+    setSalesData({ dailyTarget, salesEntries });
+  }, [dailyTarget, salesEntries, setSalesData]);
+
   const handleTargetChange = (e) => {
     const target = parseInt(e.target.value) || 0;
     setDailyTarget(target);
-    setSalesData({ dailyTarget: target, salesEntries }); // Update parent state
   };
 
   const addSalesEntry = () => {
-    const newEntries = [...salesEntries, { product: '', packSize: '', quantity: 0, price: 0 }];
+    const newEntries = [
+      ...salesEntries,
+      { product: '', packSize: '', quantity: 0, price: 0 },
+    ];
     setSalesEntries(newEntries);
-    setSalesData({ dailyTarget, salesEntries: newEntries }); // Also update parent state
   };
 
   const handleProductChange = (index, product) => {
-    const updatedEntries = [...salesEntries];
-    updatedEntries[index].product = product;
-    updatedEntries[index].packSize = '';
-    updatedEntries[index].quantity = 0;
-    updatedEntries[index].price = 0;
+    const updatedEntries = salesEntries.map((entry, i) =>
+      i === index ? { ...entry, product, packSize: '', quantity: 0, price: 0 } : entry
+    );
     setSalesEntries(updatedEntries);
-    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handlePackSizeChange = (index, packSize) => {
-    const updatedEntries = [...salesEntries];
-    updatedEntries[index].packSize = packSize;
+    const updatedEntries = salesEntries.map((entry, i) =>
+      i === index ? { ...entry, packSize } : entry
+    );
     setSalesEntries(updatedEntries);
-    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handleQuantityChange = (index, quantity) => {
-    const updatedEntries = [...salesEntries];
-    updatedEntries[index].quantity = parseInt(quantity) || 0;
+    const updatedEntries = salesEntries.map((entry, i) =>
+      i === index ? { ...entry, quantity: parseInt(quantity) || 0 } : entry
+    );
     setSalesEntries(updatedEntries);
-    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const handlePriceChange = (index, price) => {
-    const updatedEntries = [...salesEntries];
-    updatedEntries[index].price = parseFloat(price) || 0;
+    const updatedEntries = salesEntries.map((entry, i) =>
+      i === index ? { ...entry, price: parseFloat(price) || 0 } : entry
+    );
     setSalesEntries(updatedEntries);
-    setSalesData({ dailyTarget, salesEntries: updatedEntries });
   };
 
   const calculateTotalSales = () => {
@@ -90,7 +93,12 @@ const Sales = ({ setSalesData }) => {
       <h2>Sales</h2>
       <div>
         <label>Daily Target: </label>
-        <input type="number" value={dailyTarget} onChange={handleTargetChange} />
+        <input
+          type="number"
+          value={dailyTarget}
+          onChange={handleTargetChange}
+          placeholder="Enter target"
+        />
       </div>
       <h4>Percentage of Target: {percentageOfTarget.toFixed(2)}%</h4>
 
@@ -98,21 +106,33 @@ const Sales = ({ setSalesData }) => {
         <h3>Sales per Product per Pack Size</h3>
         {salesEntries.map((entry, index) => (
           <div key={index}>
-            <select onChange={(e) => handleProductChange(index, e.target.value)}>
+            <select
+              value={entry.product}
+              onChange={(e) => handleProductChange(index, e.target.value)}
+            >
               <option value="">Select Product</option>
               {Object.keys(categories).flatMap((category) =>
                 Object.keys(categories[category]).map((product) => (
-                  <option key={product} value={product}>{product}</option>
+                  <option key={product} value={product}>
+                    {product}
+                  </option>
                 ))
               )}
             </select>
-            <select onChange={(e) => handlePackSizeChange(index, e.target.value)} value={entry.packSize}>
+            <select
+              value={entry.packSize}
+              onChange={(e) => handlePackSizeChange(index, e.target.value)}
+              disabled={!entry.product}
+            >
               <option value="">Select Pack Size</option>
-              {entry.product && Object.keys(categories).flatMap((category) =>
-                categories[category][entry.product]?.packSizes.map((size) => (
-                  <option key={size} value={size}>{size}</option>
-                ))
-              )}
+              {entry.product &&
+                Object.keys(categories).flatMap((category) =>
+                  categories[category][entry.product]?.packSizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))
+                )}
             </select>
             <input
               type="number"

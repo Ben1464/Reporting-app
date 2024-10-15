@@ -1,26 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MarketingActivities = ({ setMarketingData }) => {
   const [activities, setActivities] = useState([
     { activity: '', goal: '', budget: '', budgetUtilized: '', engagementMetric: '', kpi: '', status: '' },
   ]);
 
-  // Update both local and parent state
+  // Sync the parent state with the local state
+  useEffect(() => {
+    setMarketingData(activities);
+  }, [activities, setMarketingData]);
+
+  // Handle changes in input fields and update state
   const handleChange = (index, field, value) => {
-    const updatedActivities = [...activities];
-    updatedActivities[index][field] = value;
-    setActivities(updatedActivities);  // Update local state
-    setMarketingData(updatedActivities);  // Update parent state
+    const updatedActivities = activities.map((act, i) =>
+      i === index ? { ...act, [field]: value } : act
+    );
+    setActivities(updatedActivities);
   };
 
-  // Add a new activity entry
+  // Add a new empty activity entry
   const addActivity = () => {
-    const newActivities = [
+    setActivities([
       ...activities,
       { activity: '', goal: '', budget: '', budgetUtilized: '', engagementMetric: '', kpi: '', status: '' },
-    ];
-    setActivities(newActivities);
-    setMarketingData(newActivities);  // Also update parent state
+    ]);
   };
 
   return (
@@ -47,6 +50,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="text"
                   value={activity.activity}
                   onChange={(e) => handleChange(index, 'activity', e.target.value)}
+                  placeholder="Enter activity"
                 />
               </td>
               <td>
@@ -54,6 +58,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="text"
                   value={activity.goal}
                   onChange={(e) => handleChange(index, 'goal', e.target.value)}
+                  placeholder="Enter goal"
                 />
               </td>
               <td>
@@ -61,6 +66,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="number"
                   value={activity.budget}
                   onChange={(e) => handleChange(index, 'budget', e.target.value)}
+                  placeholder="Enter budget"
                 />
               </td>
               <td>
@@ -68,6 +74,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="number"
                   value={activity.budgetUtilized}
                   onChange={(e) => handleChange(index, 'budgetUtilized', e.target.value)}
+                  placeholder="Budget utilized"
                 />
               </td>
               <td>
@@ -75,6 +82,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="text"
                   value={activity.engagementMetric}
                   onChange={(e) => handleChange(index, 'engagementMetric', e.target.value)}
+                  placeholder="Engagement metric"
                 />
               </td>
               <td>
@@ -82,6 +90,7 @@ const MarketingActivities = ({ setMarketingData }) => {
                   type="text"
                   value={activity.kpi}
                   onChange={(e) => handleChange(index, 'kpi', e.target.value)}
+                  placeholder="Enter KPI"
                 />
               </td>
               <td>
